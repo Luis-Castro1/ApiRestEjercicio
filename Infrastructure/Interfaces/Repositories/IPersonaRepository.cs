@@ -10,7 +10,7 @@ namespace Infrastructure.Interfaces.Repositories
 {
     public interface IPersonaRepository
     {
-        Task <int>AddPersonaAsync(PersonaEntity persona);
+        Task <PersonaEntity>AddPersonaAsync(CrearPersonaEntity persona);
         Task<IEnumerable<PersonaEntity>> GetPersonasAsync();
         Task<PersonaEntity> GetPersonaByIdAsync(int idPersona);
         Task UpdatePersonaAsync(PersonaEntity persona);

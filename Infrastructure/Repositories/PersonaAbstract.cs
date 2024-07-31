@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Threading.Tasks;
+using Domain.Entities;
 using Microsoft.Data.SqlClient;
 
 namespace Infrastructure.Repositories
@@ -20,6 +21,32 @@ namespace Infrastructure.Repositories
         protected SqlConnection GetConnection()
         {
             return new SqlConnection(_connectionString);
+        }
+
+        protected async Task<IEnumerable<T>> CrearPersona<T>(string storedProcedure, CrearPersonaEntity nuevaPersona)
+        {
+            try
+            {
+                using var connection = GetConnection();
+                using var command = CreateCommand(connection, storedProcedure, nuevaPersona);
+                await connection.OpenAsync();
+                using var reader = await command.ExecuteReaderAsync();
+                var results = new List<T>();
+
+                while (await reader.ReadAsync())
+                {
+                    var Persona = MapReaderToEntity<T>(reader);
+                    results.Add(Persona);
+                }
+
+                await connection.CloseAsync();
+                return results;
+
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException(ex.Message.ToString());
+            }
         }
 
         protected async Task<IEnumerable<T>> QueryAsync<T>(string storedProcedure, object parameters = null)

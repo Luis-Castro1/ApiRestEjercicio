@@ -16,7 +16,7 @@ namespace Application.Services
             _personaRepository = personaRepository;
         }
 
-        public Task<int> AddPersonaAsync(PersonaEntity persona)
+        public Task<PersonaEntity> AddPersonaAsync(CrearPersonaEntity persona)
         {
             return _personaRepository.AddPersonaAsync(persona);
         }

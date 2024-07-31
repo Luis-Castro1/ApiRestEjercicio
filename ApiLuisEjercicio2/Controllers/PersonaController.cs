@@ -38,10 +38,28 @@ namespace Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<int>> AddPersona([FromBody] PersonaEntity persona)
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(PersonaEntity))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<PersonaEntity>> AddPersona([FromBody] CrearPersonaEntity persona)
         {
-            var id = await _personaService.AddPersonaAsync(persona);
-            return Ok(id);
+            try
+            {
+            var PersonaCreada = await _personaService.AddPersonaAsync(persona);
+
+            if (PersonaCreada == null)
+            {
+                return BadRequest(error: "No se pudo crear la persona");
+            }
+
+            var uri = new Uri($"{Request.Scheme}://{Request.Host}/api/Personas/{PersonaCreada.Id}");
+
+            return Created(uri, PersonaCreada);
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message.ToString());
+            }
         }
 
         [HttpPut("{id}")]

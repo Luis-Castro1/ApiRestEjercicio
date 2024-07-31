@@ -9,7 +9,7 @@ namespace Infrastructure.Interfaces.Services
 {
     public interface IPersonaService
     {
-        Task <int>AddPersonaAsync(PersonaEntity persona);
+        Task <PersonaEntity> AddPersonaAsync(CrearPersonaEntity persona);
         Task DeletePersonaAsync(int id);
         Task<PersonaEntity> GetPersonaByIdAsync(int id);
         Task<IEnumerable<PersonaEntity>> GetPersonasAsync();

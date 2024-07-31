@@ -18,16 +18,29 @@ namespace Infrastructure.Repositories
         }
         public async Task<IEnumerable<PersonaEntity>> GetPersonasAsync()
         {
-            return await QueryAsync<PersonaEntity>("ListarPersonas");
+            return await QueryAsync<PersonaEntity>("RecuperarPersonas");
         }
         public async Task<PersonaEntity> GetPersonaByIdAsync(int idPersona)
         {
            return await QueryFirstOrDefaultAsync<PersonaEntity>("RecuperarPersonaPorId", new { IdPersona = idPersona });
         }
 
-        public Task<int> AddPersonaAsync(PersonaEntity nuevaPersona)
+        public async Task<PersonaEntity> AddPersonaAsync(CrearPersonaEntity nuevaPersona)
         {
-            throw new NotImplementedException();
+
+            var PersonaCreada =  await QueryFirstOrDefaultAsync<PersonaEntity>("CrearPersona",
+                new
+                {
+                    Nombre = nuevaPersona.Nombre,
+                    Apellido = nuevaPersona.Apellido,
+                    Email = nuevaPersona.Email,
+                    Telefono = nuevaPersona.Telefono,
+                    Direccion = nuevaPersona.Direccion,
+                    Edad = nuevaPersona.Edad
+                }     
+            );
+
+            return PersonaCreada;
         }
 
         public Task DeletePersonaAsync(int idPersona)
