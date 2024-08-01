@@ -1,6 +1,7 @@
 ﻿// Application/Services/PersonaService.cs
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ApiLuisEjercicio2.Response;
 using Domain.Entities;
 using Infrastructure.Interfaces.Repositories;
 using Infrastructure.Interfaces.Services;
@@ -16,9 +17,9 @@ namespace Application.Services
             _personaRepository = personaRepository;
         }
 
-        public Task<PersonaEntity> AddPersonaAsync(CrearPersonaEntity persona)
+        public async Task<PersonaResponse> AddPersonaAsync(CrearPersonaEntity persona)
         {
-            return _personaRepository.AddPersonaAsync(persona);
+            return await _personaRepository.AddPersonaAsync(persona);
         }
 
         public Task DeletePersonaAsync(int id)

@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using ApiLuisEjercicio2.Response;
+using Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace Infrastructure.Interfaces.Repositories
 {
     public interface IPersonaRepository
     {
-        Task <PersonaEntity>AddPersonaAsync(CrearPersonaEntity persona);
+        Task<PersonaResponse> AddPersonaAsync(CrearPersonaEntity persona);
         Task<IEnumerable<PersonaEntity>> GetPersonasAsync();
         Task<PersonaEntity> GetPersonaByIdAsync(int idPersona);
         Task UpdatePersonaAsync(PersonaEntity persona);

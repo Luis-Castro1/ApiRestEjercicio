@@ -1,9 +1,13 @@
-﻿using Domain.Entities;
+﻿using ApiLuisEjercicio2.Response;
+using Azure;
+using Domain.Entities;
 using Infrastructure.Interfaces.Repositories;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -25,22 +29,24 @@ namespace Infrastructure.Repositories
            return await QueryFirstOrDefaultAsync<PersonaEntity>("RecuperarPersonaPorId", new { IdPersona = idPersona });
         }
 
-        public async Task<PersonaEntity> AddPersonaAsync(CrearPersonaEntity nuevaPersona)
+        public async Task<PersonaResponse> AddPersonaAsync(CrearPersonaEntity nuevaPersona)
         {
+            PersonaResponse response = new PersonaResponse();
+            try
+            {
+            var PersonaCreada = await CrearPersona<PersonaEntity>("CrearPersona", nuevaPersona);
+            response.Result = PersonaCreada;
+            response.IsSuccess = true;
+            response.Message = "Persona creada correctamente";
 
-            var PersonaCreada =  await QueryFirstOrDefaultAsync<PersonaEntity>("CrearPersona",
-                new
-                {
-                    Nombre = nuevaPersona.Nombre,
-                    Apellido = nuevaPersona.Apellido,
-                    Email = nuevaPersona.Email,
-                    Telefono = nuevaPersona.Telefono,
-                    Direccion = nuevaPersona.Direccion,
-                    Edad = nuevaPersona.Edad
-                }     
-            );
-
-            return PersonaCreada;
+            }
+            catch (Microsoft.Data.SqlClient.SqlException ex)
+            {
+                response.IsSuccess = false;
+                response.Message = ex.Message;
+            }
+            
+            return response;
         }
 
         public Task DeletePersonaAsync(int idPersona)

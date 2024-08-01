@@ -5,6 +5,11 @@ using Domain.Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Infrastructure.Interfaces.Services;
+using Application.Mapping;
+using ApiLuisEjercicio2.Response;
+using System.Text.Json.Serialization;
+using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace Api.Controllers
 {
@@ -37,29 +42,12 @@ namespace Api.Controllers
             return Ok(persona);
         }
 
-        [HttpPost]
+        [HttpPost(Name = "CrearPersona")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(PersonaEntity))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<PersonaEntity>> AddPersona([FromBody] CrearPersonaEntity persona)
+        public async Task<ActionResult> AddPersona([FromBody] CrearPersonaEntity persona)
         {
-            try
-            {
-            var PersonaCreada = await _personaService.AddPersonaAsync(persona);
-
-            if (PersonaCreada == null)
-            {
-                return BadRequest(error: "No se pudo crear la persona");
-            }
-
-            var uri = new Uri($"{Request.Scheme}://{Request.Host}/api/Personas/{PersonaCreada.Id}");
-
-            return Created(uri, PersonaCreada);
-
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message.ToString());
-            }
+            return Created("",await _personaService.AddPersonaAsync(persona));
         }
 
         [HttpPut("{id}")]
